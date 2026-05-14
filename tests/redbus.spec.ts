@@ -1,27 +1,29 @@
 import { test, expect } from '@playwright/test';
-import { HomePage } from '../src/Pages/HomePage';
-import { SearchResultPage } from '../src/Pages/SearchResultPage';
-import { Config } from '../src/utils/config';
+import { homepage } from '../src/Pages/HomePage';
+import { searchresultspage } from '../src/Pages/searchresultspage';
+import { config } from '../src/utils/config';
 
 test.describe('RedBus scenarios', () => {
-  let homePage: HomePage;
-  let searchResultPage: SearchResultPage;
+  let homePage: homepage;
+  let searchResultPage: searchresultspage;
 
   test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
-    searchResultPage = new SearchResultPage(page);
+    homePage = new homepage(page);
+    searchResultPage = new searchresultspage(page);
     await homePage.launch()
   });
 
-  test('TC#01-Validate empty search Error Message', async ({ page }) => {
+  test('TC#01-Validate empty search Error Message', async () => {
     await homePage.validateError();
 
   });
 
-  test.only('TC#02-Validate Search Functionality', async ({ page }) => {
+  test.only('TC#02-Validate Search Functionality', async () => {
     
-    await homePage.searchBuses(Config.source, Config.destination);
+    await homePage.searchBuses(config.source, config.destination);
+    await homePage.dateSelection(config.date);
     await homePage.clickSearch();
-    await searchResultPage.getNthBusDetails(Config.nthBus);
+    const busDetails = await searchResultPage.getNthBusDetails(config.nthBus);
+    console.log(busDetails);
   });
 });
